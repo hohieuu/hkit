@@ -52,30 +52,7 @@ Then autonomously explore the codebase:
 
 Present the breakdown using **preview** for a structured view:
 
-```
-AskUserQuestion({
-  questions: [{
-    question: "Here's the breakdown. Does this capture everything?",
-    header: "Breakdown",
-    options: [
-      {
-        label: "Looks complete (Recommended)",
-        description: "All tasks accounted for",
-        preview: "## Task Breakdown\n\n| # | Task | Files | Effort | Risk |\n|---|------|-------|--------|------|\n| 1 | Update data model | models/user.go | S | Low |\n| 2 | Add service logic | services/user.go | M | Med |\n| 3 | Add API endpoint | handlers/user.go | S | Low |\n| 4 | Update tests | *_test.go (3 files) | M | Low |\n| 5 | Add migration | migrations/ | XS | Med |\n\n**Total: M-L** (estimated 6-10 hours)\n\n**Risks:**\n- Migration needs downtime window\n- Service logic has edge cases to handle"
-      },
-      {
-        label: "Missing tasks",
-        description: "There are things not captured here"
-      },
-      {
-        label: "Over-scoped",
-        description: "Some of these tasks aren't needed"
-      }
-    ],
-    multiSelect: false
-  }]
-})
-```
+**Breakdown** (single, with preview showing a task table of # / Task / Files / Effort / Risk + total + risks): Looks complete (Recommended) / Missing tasks / Over-scoped
 
 - If "Missing tasks", ask what's missing and update.
 - If "Over-scoped", ask what to remove and update.

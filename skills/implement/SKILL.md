@@ -82,20 +82,7 @@ For each task:
 
 After completing 50% of tasks (or after any risky change), checkpoint with the user:
 
-```
-AskUserQuestion({
-  questions: [{
-    question: "I've completed <N>/<Total> changes. Quick checkpoint — should I continue?",
-    header: "Checkpoint",
-    options: [
-      { label: "Continue", description: "Changes look good, keep going" },
-      { label: "Pause & review", description: "I want to review what's been done so far" },
-      { label: "Change approach", description: "I see an issue, let's adjust" }
-    ],
-    multiSelect: false
-  }]
-})
-```
+**Checkpoint** (single): Continue / Pause & review / Change approach
 
 - If "Pause & review", show a diff summary and wait.
 - If "Change approach", ask what to adjust and update remaining tasks.
@@ -106,20 +93,7 @@ AskUserQuestion({
 
 After all tasks are completed:
 
-```
-AskUserQuestion({
-  questions: [{
-    question: "Implementation complete. What's next?",
-    header: "Next",
-    options: [
-      { label: "Review code (Recommended)", description: "Run /review to check quality and correctness" },
-      { label: "Run tests", description: "Execute the test suite to verify changes" },
-      { label: "Done", description: "No further action — commit and push manually when ready" }
-    ],
-    multiSelect: false
-  }]
-})
-```
+**Next** (single): Review code (Recommended) / Run tests / Done
 
 #### Chaining
 
