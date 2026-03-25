@@ -4,7 +4,7 @@ description: >-
   Interactive code review skill. Use after implementation to check code quality,
   correctness, security, and patterns. Presents findings with previews for
   side-by-side before/after comparison. User confirms which issues to fix.
-  Chains from: implement. Chains to: commit.
+  Chains from: implement.
 ---
 
 # Review — Interactive Code Review
@@ -148,9 +148,8 @@ AskUserQuestion({
     question: "Code looks clean — no issues found. What's next?",
     header: "Clean",
     options: [
-      { label: "Commit (Recommended)", description: "Proceed to /commit" },
-      { label: "Run tests", description: "Run test suite to double-check" },
-      { label: "Done", description: "No further action" }
+      { label: "Run tests (Recommended)", description: "Run test suite to double-check before committing" },
+      { label: "Done", description: "No further action — commit manually when ready" }
     ],
     multiSelect: false
   }]
@@ -174,10 +173,9 @@ AskUserQuestion({
     question: "All selected fixes applied. What's next?",
     header: "Next",
     options: [
-      { label: "Commit (Recommended)", description: "Proceed to /commit" },
-      { label: "Run tests", description: "Verify fixes don't break anything" },
+      { label: "Run tests (Recommended)", description: "Verify fixes don't break anything before committing" },
       { label: "Review again", description: "Re-review the fixed code" },
-      { label: "Done", description: "No further action" }
+      { label: "Done", description: "No further action — commit manually when ready" }
     ],
     multiSelect: false
   }]
@@ -188,10 +186,9 @@ AskUserQuestion({
 
 | User picks | Action |
 |-----------|--------|
-| Commit | Invoke skill **commit** |
-| Run tests | Run `make test` or equivalent |
+| Run tests | Run `make test` or equivalent, report results |
 | Review again | Loop back to [Review] |
-| Done | Exit |
+| Done | Remind user to commit and push manually when ready |
 
 **TaskUpdate**: Mark findings task as `completed`.
 

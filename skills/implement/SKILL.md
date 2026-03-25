@@ -147,7 +147,7 @@ AskUserQuestion({
     options: [
       { label: "Review code (Recommended)", description: "Run /review to check quality and correctness" },
       { label: "Run tests", description: "Execute the test suite to verify changes" },
-      { label: "Commit", description: "Changes look good — proceed to /commit" },
+      { label: "Done", description: "No further action — commit and push manually when ready" },
       { label: "Done", description: "No further action needed" }
     ],
     multiSelect: false
@@ -161,8 +161,7 @@ AskUserQuestion({
 |-----------|--------|
 | Review code | Invoke skill **review** |
 | Run tests | Run `make test` or equivalent, report results |
-| Commit | Invoke skill **commit** |
-| Done | Exit |
+| Done | Remind user to commit and push manually when ready |
 
 ## Key Principles
 
