@@ -156,6 +156,12 @@ Fires on every `UserPromptSubmit`. Injects a brief skill-routing checklist into 
 
 Registered in `~/.claude/settings.json` under `hooks.UserPromptSubmit`.
 
+**Why not just use `CLAUDE.md`?**
+
+`CLAUDE.md` is read once at session start. As a conversation grows longer, those instructions can get deprioritized — Claude may skip skill evaluation and just act. The hook re-injects the routing checklist on every prompt, so skill evaluation stays consistent regardless of how long the session is.
+
+Think of it as: `CLAUDE.md` = the rules. Hook = the reminder that runs the rules every time.
+
 ### Command (`commands/brainstorm.md`)
 
 `/brainstorm` → redirects to `/brainstorming` skill. Shorthand alias.
