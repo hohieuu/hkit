@@ -91,8 +91,7 @@ flowchart TD
     H --> L
     I --> J
     L --> M
-    M --> N["/commit"]
-    N --> O["/mr"]
+    M --> N(["commit & push\n(you do this)"])
 ```
 
 ---
@@ -109,8 +108,7 @@ flowchart LR
     IV --> DC
     DC --> IM
     IM --> RV["/review"]
-    RV --> CM["/commit"]
-    CM --> MR["/mr"]
+    RV --> DONE(["commit & push\n(you do this)"])
     ET["/estimate"] --> BS & DC & IM
 ```
 
