@@ -4,6 +4,20 @@ Centralized Claude Code skill kit. One repo to own, version, and share your Clau
 
 **What's inside:** 7 skills + a skill-router hook + a brainstorm command + workflow rules. Everything wires together to make Claude evaluate _how_ to help before it starts helping.
 
+## Install
+
+```bash
+git clone https://github.com/hohieuu/hkit ~/Documents/hkit && ~/Documents/hkit/install.sh
+```
+
+Then add one line to `~/.claude/CLAUDE.md`:
+
+```
+@~/Documents/hkit/CLAUDE.md
+```
+
+Open a new Claude Code session — the skill system is active.
+
 ---
 
 ## Component Map
@@ -102,23 +116,11 @@ flowchart LR
 
 ---
 
-## Install
+## Install (details)
 
 **Requirements:** `bash`, `jq`
 
-```bash
-git clone <repo-url> ~/Documents/hkit
-cd ~/Documents/hkit
-./install.sh
-```
-
-Then add one line to `~/.claude/CLAUDE.md`:
-
-```
-@~/Documents/hkit/CLAUDE.md
-```
-
-That's it. Open a new Claude Code session and the skill system is active.
+See the one-liner at the top. The script is idempotent — safe to re-run after pulling updates.
 
 ### What install.sh does
 
