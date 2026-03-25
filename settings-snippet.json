@@ -1,0 +1,14 @@
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "HKIT_DIR/hooks/skill-router.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
