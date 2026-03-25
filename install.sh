@@ -6,7 +6,7 @@
 set -euo pipefail
 
 HKIT_DIR="$( cd "$(dirname "$0")" && pwd )"
-CLAUDE_DIR="$HOME/.claude"
+CLAUDE_DIR="${CLAUDE_DIR:-$HOME/.claude}"
 DATE=$(date +%Y%m%d)
 
 # ─── helpers ────────────────────────────────────────────────────────────────
