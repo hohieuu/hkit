@@ -22,13 +22,7 @@ If any of these signals are present, trigger this skill:
 - User references something ambiguous ("that thing", "the bug", "the page")
 </HARD-GATE>
 
-## Tool Reference
-
-| Tool | Usage |
-|------|-------|
-| **TaskCreate** | Create 3 tasks: Identify gaps → Ask questions → Confirm & route |
-| **TaskUpdate** | Track progress through each step |
-| **AskUserQuestion** | All clarification interactions (max 4 Qs per call, 2–4 options each) |
+**AskUserQuestion constraints:** max 4 questions/call · 2–4 options each · header ≤12 chars.
 
 ## Process
 
@@ -65,82 +59,16 @@ Do NOT ask the user anything yet. Prepare your questions.
 
 Ask up to **3 rounds** of questions. Each round is one **AskUserQuestion** call with 1–4 questions.
 
-#### Round 1 — Intent & Scope
+**Round 1 — Intent & Scope:**
+- **Intent** (single): \<Interpretation A\> / \<Interpretation B\> / \<Interpretation C\>
+- **Scope** (single): Single file / One module / Cross-cutting / Not sure yet
 
-```
-AskUserQuestion({
-  questions: [
-    {
-      question: "What do you mean by '<ambiguous phrase from request>'?",
-      header: "Intent",
-      options: [
-        { label: "<Interpretation A>", description: "<What this means concretely>" },
-        { label: "<Interpretation B>", description: "<What this means concretely>" },
-        { label: "<Interpretation C>", description: "<What this means concretely>" }
-      ],
-      multiSelect: false
-    },
-    {
-      question: "What is the scope of this change?",
-      header: "Scope",
-      options: [
-        { label: "Single file", description: "Change is localized to one file or function" },
-        { label: "One module", description: "Change spans a module or package" },
-        { label: "Cross-cutting", description: "Change touches multiple modules or layers" },
-        { label: "Not sure yet", description: "Need to investigate first" }
-      ],
-      multiSelect: false
-    }
-  ]
-})
-```
+**Round 2 — Constraints & Priority** (if still unclear):
+- **Constraints** (multi): Don't break API / Minimal change / Performance / No constraints
+- **Priority** (single): Quick fix / Do it right / Exploratory
 
-#### Round 2 — Constraints & Priority (if still unclear)
-
-```
-AskUserQuestion({
-  questions: [
-    {
-      question: "What constraints should I respect?",
-      header: "Constraints",
-      options: [
-        { label: "Don't break API", description: "Backward compatibility is required" },
-        { label: "Minimal change", description: "Smallest possible diff" },
-        { label: "Performance", description: "Must not degrade performance" },
-        { label: "No constraints", description: "Do whatever makes sense" }
-      ],
-      multiSelect: true
-    },
-    {
-      question: "What's the priority here?",
-      header: "Priority",
-      options: [
-        { label: "Quick fix", description: "Ship fast, clean up later" },
-        { label: "Do it right", description: "Take time for a proper solution" },
-        { label: "Exploratory", description: "Not sure yet, let's figure it out" }
-      ],
-      multiSelect: false
-    }
-  ]
-})
-```
-
-#### Round 3 — Edge Cases (only if needed)
-
-```
-AskUserQuestion({
-  questions: [{
-    question: "How should we handle <specific edge case>?",
-    header: "Edge case",
-    options: [
-      { label: "<Option A>", description: "<Behavior>" },
-      { label: "<Option B>", description: "<Behavior>" },
-      { label: "Ignore for now", description: "Handle it later or not at all" }
-    ],
-    multiSelect: false
-  }]
-})
-```
+**Round 3 — Edge Cases** (only if needed):
+- **Edge case** (single): \<Option A\> / \<Option B\> / Ignore for now
 
 **TaskUpdate**: Mark task 2 as `completed`.
 
@@ -150,23 +78,9 @@ AskUserQuestion({
 
 **TaskUpdate**: Mark task 3 as `in_progress`.
 
-Summarize what you understood in 2–3 lines, then ask where to go next:
+Summarize understanding in 2–3 lines, then:
 
-```
-AskUserQuestion({
-  questions: [{
-    question: "I now understand the task. What should we do next?",
-    header: "Next step",
-    options: [
-      { label: "Start implementing", description: "Requirements are clear — proceed to /implement" },
-      { label: "Brainstorm first", description: "Needs design exploration — proceed to /brainstorming" },
-      { label: "Investigate first", description: "Need to dig into the code — proceed to /investigate" },
-      { label: "Just do it", description: "Skip workflows, execute directly" }
-    ],
-    multiSelect: false
-  }]
-})
-```
+**Next step** (single): Start implementing / Brainstorm first / Investigate first / Just do it
 
 #### Chaining
 

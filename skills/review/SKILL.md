@@ -13,57 +13,18 @@ description: >-
 
 Review code changes with structured feedback. Present issues visually, let the user decide what to fix.
 
-## Tool Reference
-
-| Tool | Usage |
-|------|-------|
-| **TaskCreate** | Create tasks for each review category |
-| **TaskUpdate** | Track review progress |
-| **AskUserQuestion** | Present findings, get user decisions on fixes. Use `preview` for code comparisons |
+**AskUserQuestion constraints:** max 4 questions/call · 2–4 options each · header ≤12 chars · use preview for before/after code comparisons.
 
 ## Process
 
 ### Initialization
 
-Determine what to review:
-
-```
-AskUserQuestion({
-  questions: [
-    {
-      question: "What should I review?",
-      header: "Scope",
-      options: [
-        { label: "Unstaged changes (Recommended)", description: "Review all uncommitted changes (git diff)" },
-        { label: "Staged changes", description: "Review only staged changes (git diff --staged)" },
-        { label: "Last commit", description: "Review the most recent commit" },
-        { label: "Specific files", description: "I'll tell you which files" }
-      ],
-      multiSelect: false
-    },
-    {
-      question: "What aspects should I focus on?",
-      header: "Focus",
-      options: [
-        { label: "All (Recommended)", description: "Correctness, security, performance, style" },
-        { label: "Correctness only", description: "Logic bugs, edge cases, error handling" },
-        { label: "Security", description: "Injection, auth, data exposure, OWASP top 10" },
-        { label: "Performance", description: "N+1 queries, memory leaks, unnecessary allocations" }
-      ],
-      multiSelect: true
-    }
-  ]
-})
-```
+- **Scope** (single): Unstaged changes (Recommended) / Staged changes / Last commit / Specific files
+- **Focus** (multi): All (Recommended) / Correctness only / Security / Performance
 
 Create tasks based on focus areas selected:
-
-```
-TaskCreate({ subject: "Review correctness", activeForm: "Reviewing correctness" })
-TaskCreate({ subject: "Review security", activeForm: "Reviewing security" })
-TaskCreate({ subject: "Review performance", activeForm: "Reviewing performance" })
-TaskCreate({ subject: "Present findings & apply fixes", activeForm: "Applying fixes" })
-```
+- `subject`: "Review correctness" / `subject`: "Review security" / `subject`: "Review performance"
+- `subject`: "Present findings & apply fixes" / `activeForm`: "Applying fixes"
 
 ---
 
@@ -87,74 +48,15 @@ If issues found, present them grouped by severity. Use **preview** for before/af
 
 #### Critical Issues (must fix)
 
-```
-AskUserQuestion({
-  questions: [{
-    question: "Found <N> critical issue(s). Which should I fix?",
-    header: "Critical",
-    options: [
-      {
-        label: "Fix: nil check missing",
-        description: "services/user.go:42 — potential nil pointer dereference",
-        preview: "## Before\n```go\nresult := repo.Find(id)\nreturn result.Name // panic if nil\n```\n\n## After\n```go\nresult := repo.Find(id)\nif result == nil {\n    return \"\", ErrNotFound\n}\nreturn result.Name, nil\n```"
-      },
-      {
-        label: "Fix: SQL injection",
-        description: "stores/query.go:18 — string concatenation in query",
-        preview: "## Before\n```go\nquery := \"SELECT * FROM users WHERE name = '\" + name + \"'\"\n```\n\n## After\n```go\nquery := \"SELECT * FROM users WHERE name = ?\"\ndb.Raw(query, name)\n```"
-      },
-      {
-        label: "Fix all critical",
-        description: "Apply all critical fixes at once"
-      }
-    ],
-    multiSelect: true
-  }]
-})
-```
+**Critical** (multi, each option has preview with before/after code): Fix: \<issue description\> / Fix all critical
 
 #### Suggestions (nice to have)
 
-```
-AskUserQuestion({
-  questions: [{
-    question: "Found <N> suggestion(s). Want me to apply any?",
-    header: "Suggestions",
-    options: [
-      {
-        label: "Rename variable",
-        description: "processor.go:15 — 'x' should be 'itemCount' for clarity",
-        preview: "## Before\n```go\nx := len(items)\nfor i := 0; i < x; i++ {\n```\n\n## After\n```go\nitemCount := len(items)\nfor i := 0; i < itemCount; i++ {\n```"
-      },
-      {
-        label: "Apply all suggestions",
-        description: "Apply all non-critical improvements"
-      },
-      {
-        label: "Skip all",
-        description: "No suggestions needed, code is fine as-is"
-      }
-    ],
-    multiSelect: true
-  }]
-})
-```
+**Suggestions** (multi, each option has preview with before/after code): \<Suggestion\> / Apply all suggestions / Skip all
 
 If NO issues found:
 
-```
-AskUserQuestion({
-  questions: [{
-    question: "Code looks clean — no issues found. What's next?",
-    header: "Clean",
-    options: [
-      { label: "Run tests (Recommended)", description: "Run test suite to double-check before committing" },
-      { label: "Done", description: "No further action — commit manually when ready" }
-    ],
-    multiSelect: false
-  }]
-})
-```
+**Clean** (single): Run tests (Recommended) / Done
 
 ---
 
@@ -167,20 +69,7 @@ For each selected fix:
 
 After all fixes applied:
 
-```
-AskUserQuestion({
-  questions: [{
-    question: "All selected fixes applied. What's next?",
-    header: "Next",
-    options: [
-      { label: "Run tests (Recommended)", description: "Verify fixes don't break anything before committing" },
-      { label: "Review again", description: "Re-review the fixed code" },
-      { label: "Done", description: "No further action — commit manually when ready" }
-    ],
-    multiSelect: false
-  }]
-})
-```
+**Next** (single): Run tests (Recommended) / Review again / Done
 
 #### Chaining
 

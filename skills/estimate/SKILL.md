@@ -13,13 +13,7 @@ description: >-
 
 Break work down into estimatable units, score them, and produce a scoped plan.
 
-## Tool Reference
-
-| Tool | Usage |
-|------|-------|
-| **TaskCreate** | Create 3 tasks: Analyze → Break down → Confirm estimate |
-| **TaskUpdate** | Track estimation progress |
-| **AskUserQuestion** | Gather context, confirm breakdown, present estimate with previews |
+**AskUserQuestion constraints:** max 4 questions/call · 2–4 options each · header ≤12 chars · use preview for breakdown tables.
 
 ## Process
 
@@ -39,34 +33,8 @@ Set sequential dependencies.
 
 **TaskUpdate**: Mark task 1 as `in_progress`.
 
-```
-AskUserQuestion({
-  questions: [
-    {
-      question: "What are we estimating?",
-      header: "What",
-      options: [
-        { label: "Feature", description: "New functionality to build" },
-        { label: "Bug fix", description: "Issue to investigate and fix" },
-        { label: "Refactor", description: "Restructuring existing code" },
-        { label: "Migration", description: "Moving data, upgrading deps, changing infra" }
-      ],
-      multiSelect: false
-    },
-    {
-      question: "What estimation unit do you prefer?",
-      header: "Unit",
-      options: [
-        { label: "T-shirt sizes", description: "XS, S, M, L, XL — relative effort" },
-        { label: "Story points", description: "Fibonacci: 1, 2, 3, 5, 8, 13" },
-        { label: "Time (hours)", description: "Rough hours of focused work" },
-        { label: "Tasks only", description: "Just break it down, no scoring" }
-      ],
-      multiSelect: false
-    }
-  ]
-})
-```
+- **What** (single): Feature / Bug fix / Refactor / Migration
+- **Unit** (single): T-shirt sizes (XS–XL) / Story points (Fibonacci) / Time (hours) / Tasks only
 
 Then autonomously explore the codebase:
 - Identify files and modules that would be touched
@@ -123,21 +91,7 @@ AskUserQuestion({
 
 Present the final estimate:
 
-```
-AskUserQuestion({
-  questions: [{
-    question: "Estimate confirmed. What should we do with it?",
-    header: "Next",
-    options: [
-      { label: "Start implementing (Recommended)", description: "Create task list from breakdown and start via /implement" },
-      { label: "Brainstorm first", description: "Design the solution before implementing via /brainstorming" },
-      { label: "Need to decide", description: "There's a decision to make first via /decide" },
-      { label: "Export only", description: "Save the estimate as a document, don't implement" }
-    ],
-    multiSelect: false
-  }]
-})
-```
+**Next** (single): Start implementing (Recommended) / Brainstorm first / Need to decide / Export only
 
 #### Chaining
 

@@ -21,17 +21,7 @@ Start by collecting context, spiking the project to discover existing resources,
 Do NOT invoke any implementation skill, write any code, scaffold any project, or take any implementation action until you have completed the brainstorming process. This applies to EVERY project regardless of perceived simplicity.
 </HARD-GATE>
 
-## Tool Reference
-
-This skill uses the following Claude tools. Respect their constraints:
-
-| Tool | Constraints | Usage |
-|------|------------|-------|
-| **TaskCreate** | `subject` (imperative), `description`, optional `activeForm` (present continuous) | Create one task per brainstorming step for progress tracking |
-| **TaskUpdate** | `status`: pending → in_progress → completed | Mark each step as in_progress when starting, completed when done |
-| **AskUserQuestion** | Max **4 questions** per call, **2–4 options** per question, `header` max 12 chars. "Other" option auto-added. `preview` only for single-select. | All user interactions — context gathering, resource selection, clarifications, proposals, next steps |
-| **EnterPlanMode** | Requires user approval to enter | Used in Path B/C to transition from brainstorming to implementation planning |
-| **ExitPlanMode** | Reads plan from plan file, signals ready for review | Used after writing the implementation plan in plan mode |
+**AskUserQuestion constraints:** max 4 questions/call · 2–4 options each · header ≤12 chars · preview only on single-select.
 
 ## Process
 
@@ -55,75 +45,14 @@ Set up sequential dependencies using **TaskUpdate** `addBlockedBy` so each task 
 
 Present 5 context questions across **two AskUserQuestion calls** (max 4 questions per call).
 
-**Call 1 — 3 questions:**
+**Call 1** (3 questions):
+- **Current** (single): Greenfield / Existing code / Broken/buggy
+- **Objective** (single): New feature / Improvement / Fix/resolve
+- **Owner** (single): Me (dev) / My team / Handoff
 
-```
-AskUserQuestion({
-  questions: [
-    {
-      question: "What is the current state or situation right now?",
-      header: "Current",
-      options: [
-        { label: "Greenfield", description: "Starting from scratch, no existing implementation" },
-        { label: "Existing code", description: "Building on or modifying existing functionality" },
-        { label: "Broken/buggy", description: "Something exists but isn't working correctly" }
-      ],
-      multiSelect: false
-    },
-    {
-      question: "What is the desired outcome or objective?",
-      header: "Objective",
-      options: [
-        { label: "New feature", description: "Add entirely new functionality" },
-        { label: "Improvement", description: "Enhance or optimize existing behavior" },
-        { label: "Fix/resolve", description: "Fix a bug, incident, or compliance issue" }
-      ],
-      multiSelect: false
-    },
-    {
-      question: "Who will own this task and what is their role?",
-      header: "Owner",
-      options: [
-        { label: "Me (dev)", description: "I'm implementing this myself" },
-        { label: "My team", description: "Shared ownership across a team" },
-        { label: "Handoff", description: "I'm designing for someone else to implement" }
-      ],
-      multiSelect: false
-    }
-  ]
-})
-```
-
-**Call 2 — 2 questions (after user replies to Call 1):**
-
-```
-AskUserQuestion({
-  questions: [
-    {
-      question: "What format or structure should the output take?",
-      header: "Output",
-      options: [
-        { label: "Design doc", description: "Written spec with architecture details" },
-        { label: "Diagram", description: "Visual diagram (sequence, flowchart, etc.)" },
-        { label: "Code plan", description: "Step-by-step implementation plan" },
-        { label: "All of above", description: "Comprehensive output with doc, diagram, and plan" }
-      ],
-      multiSelect: true
-    },
-    {
-      question: "What limits or constraints should be respected?",
-      header: "Constraints",
-      options: [
-        { label: "Time-boxed", description: "Must be completed within a tight deadline" },
-        { label: "Tech stack", description: "Must use specific technologies or patterns" },
-        { label: "Backward compat", description: "Must not break existing behavior" },
-        { label: "Minimal scope", description: "Keep it as simple as possible (YAGNI)" }
-      ],
-      multiSelect: true
-    }
-  ]
-})
-```
+**Call 2** (2 questions, after Call 1 reply):
+- **Output** (multi): Design doc / Diagram / Code plan / All of above
+- **Constraints** (multi): Time-boxed / Tech stack / Backward compat / Minimal scope
 
 After both replies, summarize context in 1–2 lines.
 
@@ -140,23 +69,7 @@ After both replies, summarize context in 1–2 lines.
 - Present findings as a structured list (related modules, similar features, relevant configs, API contracts).
 - Ask the user which resources to reference or explore deeper:
 
-```
-AskUserQuestion({
-  questions: [{
-    question: "Which of these existing resources should we reference or explore deeper?",
-    header: "Resources",
-    options: [
-      // Dynamically generated from spike findings, max 4 options
-      // Group related resources if more than 4 found
-      { label: "<Resource group 1>", description: "<What it contains>" },
-      { label: "<Resource group 2>", description: "<What it contains>" },
-      { label: "All of them", description: "Reference everything found" },
-      { label: "None needed", description: "Proceed without referencing existing resources" }
-    ],
-    multiSelect: true
-  }]
-})
-```
+**Resources** (multi, dynamic — max 4, group if more): \<Resource group 1\> / \<Resource group 2\> / All of them / None needed
 
 - If user picks specific resources, dig into those before continuing.
 - If user picks "None needed", proceed with findings as baseline context.
@@ -169,27 +82,9 @@ AskUserQuestion({
 
 **TaskUpdate**: Mark task 3 as `in_progress`.
 
-- Ask questions **one at a time** to refine the idea using **AskUserQuestion**.
-- Prefer multiple choice options when possible; open-ended is fine too.
-- Only **one question per message** (one AskUserQuestion call).
-- Focus on: purpose, constraints, success criteria.
-- Continue until you have enough clarity to propose solutions (typically 2–4 questions).
+One AskUserQuestion call per message. Prefer multiple choice. Focus on purpose, constraints, success criteria. Typically 2–4 questions total.
 
-Example:
-```
-AskUserQuestion({
-  questions: [{
-    question: "How should errors be handled in this flow?",
-    header: "Errors",
-    options: [
-      { label: "Fail fast", description: "Stop immediately and surface the error" },
-      { label: "Retry + fallback", description: "Retry with exponential backoff, then fallback" },
-      { label: "Silent log", description: "Log the error but continue processing" }
-    ],
-    multiSelect: false
-  }]
-})
-```
+Example: **Errors** (single): Fail fast / Retry + fallback / Silent log
 
 **TaskUpdate**: Mark task 3 as `completed`.
 
@@ -199,73 +94,13 @@ AskUserQuestion({
 
 **TaskUpdate**: Mark task 4 as `in_progress`.
 
-First, ask the user to evaluate complexity:
+Ask complexity: **Complexity** (single): Complex — multiple valid approaches / Simple — clear single path
 
-```
-AskUserQuestion({
-  questions: [{
-    question: "How would you characterize this task's complexity?",
-    header: "Complexity",
-    options: [
-      { label: "Complex", description: "Multiple valid approaches, architectural decisions, ambiguous scope" },
-      { label: "Simple", description: "Clear requirements, single obvious path forward" }
-    ],
-    multiSelect: false
-  }]
-})
-```
+**Complex:** Propose 2–3 solutions with trade-offs. Use preview for side-by-side architecture comparison.
+**Approach** (single, with preview per option): Option A (Recommended) / Option B / Option C
 
-#### Complex tasks
-
-Propose 2–3 solutions with trade-offs. Use the **`preview`** field to show architecture or code structure side-by-side so the user can visually compare approaches:
-
-```
-AskUserQuestion({
-  questions: [{
-    question: "Which solution approach do you prefer?",
-    header: "Approach",
-    options: [
-      {
-        label: "Option A (Recommended)",
-        description: "Brief trade-off summary",
-        preview: "## Architecture\n\n```\nComponent A → Service B → DB\n         ↘ Cache Layer\n```\n\n**Pros:** Fast, simple\n**Cons:** Cache invalidation complexity"
-      },
-      {
-        label: "Option B",
-        description: "Brief trade-off summary",
-        preview: "## Architecture\n\n```\nComponent A → Queue → Worker → DB\n```\n\n**Pros:** Decoupled, resilient\n**Cons:** Added latency, more infra"
-      },
-      {
-        label: "Option C",
-        description: "Brief trade-off summary",
-        preview: "## Architecture\n\n```\nComponent A → Event Bus → Multiple Consumers\n```\n\n**Pros:** Scalable, extensible\n**Cons:** Eventual consistency, debugging harder"
-      }
-    ],
-    multiSelect: false
-  }]
-})
-```
-
-#### Simple/clear tasks
-
-- Summarize the single approach.
-- Ask user to confirm:
-
-```
-AskUserQuestion({
-  questions: [{
-    question: "Does this approach look right, or do we need to revisit?",
-    header: "Confirm",
-    options: [
-      { label: "Looks good", description: "Proceed with this approach" },
-      { label: "Need changes", description: "Go back and clarify further" }
-    ],
-    multiSelect: false
-  }]
-})
-```
-
-- If "Need changes", loop back to [2. Clarify].
+**Simple:** Summarize the single approach, then confirm:
+**Confirm** (single): Looks good / Need changes → loop back to [2. Clarify]
 
 **TaskUpdate**: Mark task 4 as `completed`.
 
@@ -275,61 +110,13 @@ AskUserQuestion({
 
 **TaskUpdate**: Mark task 5 as `in_progress`.
 
-After user confirms a solution, ask them to pick next steps:
-
-```
-AskUserQuestion({
-  questions: [{
-    question: "What would you like to do with this design?",
-    header: "Next steps",
-    options: [
-      { label: "Summary only", description: "Get a written summary of the solution, no code" },
-      { label: "Implement", description: "Move to Plan mode and start implementation planning" },
-      { label: "Both", description: "Get the summary first, then move to implementation" }
-    ],
-    multiSelect: false
-  }]
-})
-```
+**Next steps** (single): Summary only / Implement / Both
 
 #### Path A — Summary only
 
-1. Write a concise text summary of the chosen solution.
-2. Ask about diagram:
-
-```
-AskUserQuestion({
-  questions: [{
-    question: "Would you like a visual diagram of the solution?",
-    header: "Diagram",
-    options: [
-      { label: "Sequence diagram", description: "Show the flow of interactions between components" },
-      { label: "Flowchart", description: "Show the decision logic and process flow" },
-      { label: "Architecture", description: "Show the high-level component relationships" },
-      { label: "No diagram", description: "Text summary is sufficient" }
-    ],
-    multiSelect: false
-  }]
-})
-```
-
-- If a diagram type is selected, generate it following project diagram rules.
-- If "No diagram", ask about export:
-
-```
-AskUserQuestion({
-  questions: [{
-    question: "Export the summary to a specific format?",
-    header: "Export",
-    options: [
-      { label: "Markdown file", description: "Save as .md file in the project" },
-      { label: "Notion", description: "Export to Notion page" },
-      { label: "No thanks", description: "Keep it in the conversation only" }
-    ],
-    multiSelect: false
-  }]
-})
-```
+1. Write concise text summary.
+2. **Diagram** (single): Sequence diagram / Flowchart / Architecture / No diagram
+3. If no diagram: **Export** (single): Markdown file / Notion / No thanks
 
 **TaskUpdate**: Mark task 5 as `completed`. → **Terminal state: "Done"**
 

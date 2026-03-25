@@ -24,27 +24,14 @@ fi
 
 cat <<'EOF'
 <skill-router>
-Before acting on this request, evaluate if a skill should be triggered:
-
-1. Can you confidently answer: WHAT changes, WHERE in codebase, WHY, and WHAT "done" looks like?
-   → If NO to any: use /clarify (AskUserQuestion tool) before proceeding.
-
-2. Is the user asking to BUILD, CREATE, or ADD new functionality?
-   → Use /brainstorming
-
-3. Is the user reporting a BUG, ERROR, or UNEXPECTED behavior?
-   → Use /investigate
-
-4. Is the user choosing between OPTIONS or facing TRADE-OFFS?
-   → Use /decide
-
-5. Is the user asking HOW BIG, HOW LONG, or to BREAK DOWN work?
-   → Use /estimate
-
-6. Is the scope clear and ready to code (3+ files)?
-   → Use /implement with plan mode
-
-If none apply, proceed normally. Do NOT mention this evaluation to the user — just act on it.
+Evaluate before acting (silent — never tell the user):
+- unclear/vague → /clarify
+- build/create/add → /brainstorming
+- bug/error/why → /investigate
+- A vs B tradeoff → /decide
+- how big/scope → /estimate
+- 3+ files, scope clear → /implement
+- code written → /review
 </skill-router>
 EOF
 

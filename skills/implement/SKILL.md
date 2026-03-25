@@ -20,15 +20,7 @@ Do NOT write code until:
 3. For multi-file changes: a plan is approved via EnterPlanMode/ExitPlanMode
 </HARD-GATE>
 
-## Tool Reference
-
-| Tool | Usage |
-|------|-------|
-| **TaskCreate** | Create tasks for each implementation unit (file or logical change) |
-| **TaskUpdate** | Mark in_progress when starting a file, completed when done |
-| **AskUserQuestion** | Confirm scope, approach, and review checkpoints |
-| **EnterPlanMode** | For multi-file changes, enter plan mode for user approval |
-| **ExitPlanMode** | Present the plan for review before implementing |
+**AskUserQuestion constraints:** max 4 questions/call · 2–4 options each · header ≤12 chars.
 
 ## Process
 
@@ -36,33 +28,8 @@ Do NOT write code until:
 
 First, analyze the task and present scope:
 
-```
-AskUserQuestion({
-  questions: [
-    {
-      question: "Here's what I plan to change. Does this scope look right?",
-      header: "Scope",
-      options: [
-        { label: "Looks right", description: "Proceed with this scope" },
-        { label: "Too broad", description: "I want a smaller, more focused change" },
-        { label: "Too narrow", description: "There's more that needs to change" },
-        { label: "Wrong files", description: "You're looking at the wrong area" }
-      ],
-      multiSelect: false
-    },
-    {
-      question: "What's the change size?",
-      header: "Size",
-      options: [
-        { label: "Small (1-2 files)", description: "Quick change, no plan needed" },
-        { label: "Medium (3-5 files)", description: "Plan mode recommended" },
-        { label: "Large (6+ files)", description: "Plan mode required, break into phases" }
-      ],
-      multiSelect: false
-    }
-  ]
-})
-```
+- **Scope** (single): Looks right / Too broad / Too narrow / Wrong files
+- **Size** (single): Small 1-2 files / Medium 3-5 files / Large 6+ files
 
 #### Routing by size
 
@@ -147,8 +114,7 @@ AskUserQuestion({
     options: [
       { label: "Review code (Recommended)", description: "Run /review to check quality and correctness" },
       { label: "Run tests", description: "Execute the test suite to verify changes" },
-      { label: "Done", description: "No further action — commit and push manually when ready" },
-      { label: "Done", description: "No further action needed" }
+      { label: "Done", description: "No further action — commit and push manually when ready" }
     ],
     multiSelect: false
   }]
