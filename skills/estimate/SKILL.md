@@ -9,6 +9,8 @@ description: >-
 
 # Estimate — Effort Estimation & Task Breakdown
 
+**Skill identity:** Prefix every text response with `📐 [estimate]` so the user always knows which skill is active.
+
 Break work down into estimatable units, score them, and produce a scoped plan.
 
 ## Tool Reference

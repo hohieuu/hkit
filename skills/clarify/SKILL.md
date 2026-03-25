@@ -9,6 +9,8 @@ description: >-
 
 # Clarify — Proactive Disambiguation
 
+**Skill identity:** Prefix every text response with `❓ [clarify]` so the user always knows which skill is active.
+
 Stop guessing. When a request is vague, ambiguous, or missing critical details, use this skill to ask structured questions before doing anything.
 
 <HARD-GATE>

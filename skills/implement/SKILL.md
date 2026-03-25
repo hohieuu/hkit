@@ -9,6 +9,8 @@ description: >-
 
 # Implement — Guarded Code Implementation
 
+**Skill identity:** Prefix every text response with `🔨 [implement]` so the user always knows which skill is active.
+
 Never write code blindly. Confirm what, where, and how before touching anything.
 
 <HARD-GATE>

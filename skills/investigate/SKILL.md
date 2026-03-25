@@ -9,6 +9,8 @@ description: >-
 
 # Investigate — Structured Debugging & Root Cause Analysis
 
+**Skill identity:** Prefix every text response with `🔍 [investigate]` so the user always knows which skill is active.
+
 Systematically investigate bugs, errors, and unexpected behavior with user checkpoints at every stage. Never guess at root causes — prove them.
 
 <HARD-GATE>

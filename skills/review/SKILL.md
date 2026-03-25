@@ -9,6 +9,8 @@ description: >-
 
 # Review — Interactive Code Review
 
+**Skill identity:** Prefix every text response with `👀 [review]` so the user always knows which skill is active.
+
 Review code changes with structured feedback. Present issues visually, let the user decide what to fix.
 
 ## Tool Reference

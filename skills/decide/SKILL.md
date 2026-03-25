@@ -9,6 +9,8 @@ description: >-
 
 # Decide — Structured Decision Making
 
+**Skill identity:** Prefix every text response with `⚖️ [decide]` so the user always knows which skill is active.
+
 When there are multiple valid paths, don't just pick one — structure the decision so the user can make an informed choice.
 
 ## Tool Reference

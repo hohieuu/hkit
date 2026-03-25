@@ -11,6 +11,8 @@ description: >-
 
 # Brainstorming Ideas Into Designs
 
+**Skill identity:** Prefix every text response with `🧠 [brainstorm]` so the user always knows which skill is active.
+
 Help turn ideas into fully formed designs and specs through natural collaborative dialogue.
 
 Start by collecting context, spiking the project to discover existing resources, presenting them to the user for selection, asking clarifying questions, then deciding whether the task needs design proposals or can proceed directly to implementation planning.
