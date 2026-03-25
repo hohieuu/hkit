@@ -77,9 +77,9 @@ if [ "$JQ_AVAILABLE" = true ]; then
     echo '{}' > "$SETTINGS"
   fi
 
-  # Check if skill-router is already present
-  EXISTING=$(jq --arg cmd "$HKIT_DIR/hooks/skill-router.sh" \
-    '[.hooks.UserPromptSubmit[]?.hooks[]? | select(.command == $cmd)] | length' \
+  # Check if skill-router is already present (match by filename, not full path)
+  EXISTING=$(jq \
+    '[.hooks.UserPromptSubmit[]?.hooks[]? | select(.command | endswith("/skill-router.sh"))] | length' \
     "$SETTINGS" 2>/dev/null || echo "0")
 
   if [ "$EXISTING" -gt 0 ]; then
