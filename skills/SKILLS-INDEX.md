@@ -10,7 +10,7 @@
 | **decide** | `/decide` | Structured decision-making with trade-offs |
 | **estimate** | `/estimate` | Effort estimation & task breakdown |
 | **implement** | `/implement` | Guarded code implementation with checkpoints |
-| **review** | `/review` | Interactive code review with fix suggestions |
+| **review** | `/review` | Adaptive review — asks type first (code / spec / plan / config), then builds correct task list |
 
 ## Chaining Map
 
@@ -67,7 +67,7 @@
 | decide | 4 calls | 4 tasks | yes | — | — | Comparison |
 | estimate | 3 calls | 3 tasks | yes | — | — | Breakdown |
 | implement | 3+ calls | per-file | yes | yes | yes | — |
-| review | 3+ calls | per-category | yes | — | — | Before/After |
+| review | 4+ calls | type-dependent | yes | — | — | Before/After (code only) |
 
 ## When to Use Which Skill
 
@@ -79,4 +79,7 @@
 | "Should we use A or B" | `/decide` |
 | "How big is this", "Break this down" | `/estimate` |
 | Ready to code, scope is clear | `/implement` |
-| Code is written, check quality | `/review` |
+| Code is written, check quality | `/review` → picks Path A (code) |
+| Spec / design needs review | `/review` → picks Path B (spec) |
+| Plan / task list needs review | `/review` → picks Path C (plan) |
+| Config / infra needs review | `/review` → picks Path D (config) |
