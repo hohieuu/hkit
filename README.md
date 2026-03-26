@@ -7,6 +7,13 @@ Centralized Claude Code skill kit. One repo to own, version, and share your Clau
 ## Install
 
 ```bash
+bash <(curl -s https://raw.githubusercontent.com/hohieuu/hkit/main/install.sh)
+```
+
+Or clone first:
+
+```bash
+mkdir -p ~/Documents
 git clone https://github.com/hohieuu/hkit ~/Documents/hkit && ~/Documents/hkit/install.sh
 ```
 
